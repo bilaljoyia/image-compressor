@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import Features from "./Features";
+import ImageFormatGuide from "./FormateGuide";
+import FAQSection from "./FAQ";
 
 const ImageCompressor = () => {
   const buttonNames = [
@@ -43,7 +45,7 @@ const ImageCompressor = () => {
     <section className="bg-gray-100">
       <div className="container mx-auto">
         <div className="flex gap-5">
-          <div className="left-side mt-20 bg-white p-5 pt-20 flex-grow overflow-auto">
+          <div className="left-side mb-6 rounded mt-20 bg-white p-5 shadow-md pt-20 flex-grow overflow-auto">
             <h1 className="text-3xl font-semibold mb-52">
               Online Image Compressor – Quickly Compress Your Images
             </h1>
@@ -59,7 +61,7 @@ const ImageCompressor = () => {
               </p>
               <label
                 htmlFor="file-upload"
-                className="cursor-pointer px-6 py-2 bg-[#0C2F55] text-white  hover:bg-blue-600 transition"
+                className="cursor-pointer px-6 py-2 bg-[#0C2F55] hover:bg-[#F79422] text-white transition"
               >
                 Select Images
               </label>
@@ -74,7 +76,7 @@ const ImageCompressor = () => {
                 />
                 <span className="bg-[#0C2f55] text-white p-1 py-2">KB</span>
               </div>
-              <button className="bg-[#0C2F55] ml-3 text-white px-3 py-2 rounded-full">
+              <button className="bg-[#0C2F55] hover:scale-105 transition-all duration-300 ml-3 text-white px-3 py-2 rounded-full">
                 Compress & Download
               </button>
             </div>
@@ -121,6 +123,9 @@ const ImageCompressor = () => {
                 ))}
               </div>
             </div>
+            <Features />
+            <ImageFormatGuide />
+            <FAQSection />
           </div>
           <div className="flex flex-col">
             <div className="right-side rounded-md bg-white p-5 w-64 h-32 mt-20">

@@ -10,9 +10,6 @@ function App() {
     <div>
       <Header />
       <Hero />
-      <Features />
-      <ImageFormatGuide />
-      <FAQSection />
       <Footer />
     </div>
   );

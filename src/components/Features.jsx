@@ -96,7 +96,7 @@ function Features() {
 
   return (
     <div>
-      <div className="flex mt-20 mb-10 bg-[#0C2F55] text-white font-semibold justify-between items-center">
+      <div className="flex mt-20 rounded mb-10 bg-[#0C2F55] text-white font-semibold justify-between items-center">
         <div className="text-center">
           <h1 className="text-[#F79422] font-bold text-2xl">Fast</h1>
           <p className="p-5">The processing power of our tools is excellent.</p>
@@ -140,27 +140,30 @@ function Features() {
         </div>
       </div>
 
-      <section className="bg-gradient-to-br from-[#0C2F55] via-[#1E5080] to-[#3A72A5] py-16">
+      <article className="bg-gradient-to-br rounded-md mt-5 from-[#0C2F55] via-[#1E5080] to-[#3A72A5] py-16 text-white">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center text-[#F79422] mb-12">
+          <h1 className="text-4xl font-bold text-center text-[#F79422] mb-12">
             Features of Our Online Image Compressor
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          </h1>
+
+          <div className="space-y-12">
             {features.map((feature, index) => (
-              <div
+              <section
                 key={index}
-                className="bg-white rounded-lg shadow-md p-6 transition duration-300 ease-in-out transform hover:-translate-y-2 hover:shadow-lg"
+                className="bg-white bg-opacity-10 rounded-lg p-6"
               >
-                <div className="text-3xl text-blue-500 mb-4">
-                  {feature.icon}
+                <div className="flex items-center mb-4">
+                  <div className="text-3xl text-[#F79422] mr-4">
+                    {feature.icon}
+                  </div>
+                  <h2 className="text-2xl font-semibold">{feature.title}</h2>
                 </div>
-                <h3 className="text-xl font-semibold mb-2">{feature.title}</h3>
-                <p className="text-gray-600">{feature.description}</p>
-              </div>
+                <p className="text-gray-200">{feature.description}</p>
+              </section>
             ))}
           </div>
         </div>
-      </section>
+      </article>
     </div>
   );
 }
