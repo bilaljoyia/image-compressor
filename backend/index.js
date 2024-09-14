@@ -47,6 +47,7 @@ app.post('/api/articles', async (req, res) => {
 const upload = multer({ dest: 'uploads/' }); // Temp storage
 
 // Endpoint to upload and compress the image
+// Endpoint to upload and compress the image
 app.post('/compress-image', upload.single('image'), async (req, res) => {
   const sizeInKB = parseInt(req.body.size);
   const maxSizeBytes = sizeInKB * 1024; // KB to Bytes
@@ -54,18 +55,26 @@ app.post('/compress-image', upload.single('image'), async (req, res) => {
   const outputFile = `compressed_${Date.now()}_${req.file.originalname}`;
 
   try {
-    await sharp(imagePath)
-      .resize({ width: 800 }) // Adjust as needed
-      .toBuffer({ resolveWithObject: true })
-      .then(({ data, info }) => {
-        const outputSize = Math.min(info.size, maxSizeBytes);
-        sharp(data)
-          .resize({ withoutEnlargement: true })
-          .toFile(path.join('uploads', outputFile))
-          .then(() => {
-            res.download(path.join('uploads', outputFile));
-          });
-      });
+    let compressedImageBuffer = await sharp(imagePath)
+      .resize({ width: 800 }) // Adjust dimensions as needed
+      .toBuffer();
+
+    // Check size and adjust quality to meet the target size
+    let quality = 100; // Start with high quality
+    while (compressedImageBuffer.length > maxSizeBytes && quality > 0) {
+      compressedImageBuffer = await sharp(imagePath)
+        .resize({ width: 800 })
+        .jpeg({ quality }) // Reduce JPEG quality gradually
+        .toBuffer();
+      quality -= 5; // Decrease quality by 5% increments
+    }
+
+    // Save the compressed image
+    await sharp(compressedImageBuffer)
+      .toFile(path.join('uploads', outputFile));
+
+    // Send the compressed image back to the client
+    res.download(path.join('uploads', outputFile));
   } catch (error) {
     console.error('Error compressing image:', error);
     res.status(500).send('Error processing image');
@@ -73,6 +82,7 @@ app.post('/compress-image', upload.single('image'), async (req, res) => {
     fs.unlinkSync(imagePath); // Clean up the temp file
   }
 });
+
 
 
 // Start the server

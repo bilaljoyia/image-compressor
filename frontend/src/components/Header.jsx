@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { IoMdSearch } from "react-icons/io";
 
 import { FaSearch, FaChevronDown } from "react-icons/fa";
+import { Link } from "react-router-dom";
 
 function Header() {
   const [isSearchActive, setIsSearchActive] = useState(false);
@@ -18,107 +19,107 @@ function Header() {
           </div>
           <div className="flex space-x-4">
           <li>
-              <a href="/" className="text-white hover:text-gray-300">
+              <Link to="/" className="text-white hover:text-gray-300">
                 Home
-              </a>
+              </Link>
             </li>
             <li>
-              <a href="/" className="text-white hover:text-gray-300">
+              <Link to="/resize" className="text-white hover:text-gray-300">
                 Resize
-              </a>
+              </Link>
             </li>
             <li>
-              <a href="/" className="text-white hover:text-gray-300">
+              <Link to="/pdf-converter" className="text-white hover:text-gray-300">
                 PDF Converter
-              </a>
+              </Link>
             </li>
             <li className="relative group">
-              <a
-                href="/"
+              <Link
+                to="/jpeg-image-compressor"
                 className="text-white hover:text-gray-300 flex items-center"
               >
                 JPEG Compressor <FaChevronDown className="ml-1 mt-1 text-sm" />
-              </a>
+              </Link>
               <ul className="absolute w-44 rounded border-2 border-blue-200 left-0 bg-[#6070B1]  text-white shadow-md py-2 mt-1 hidden group-hover:block">
                 <li>
-                  <a href="/" className="block px-4 py-2 hover:bg-[#0C2F55]">
+                  <Link to="/" className="block px-4 py-2 hover:bg-[#0C2F55]">
                     JPEG to 1MB
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a href="/" className="block px-4 py-2 hover:bg-[#0C2F55]">
+                  <Link to="/" className="block px-4 py-2 hover:bg-[#0C2F55]">
                     JPEG to 500KB
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a href="/" className="block px-4 py-2 hover:bg-[#0C2F55]">
+                  <Link to="/" className="block px-4 py-2 hover:bg-[#0C2F55]">
                     JPEG to 200KB
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a href="/" className="block px-4 py-2 hover:bg-[#0C2F55]">
+                  <Link to="/" className="block px-4 py-2 hover:bg-[#0C2F55]">
                     JPEG to 100KB
-                  </a>
+                  </Link>
                 </li>
               </ul>
             </li>
             <li className="relative group">
-              <a
-                href="/"
+              <Link
+                to="/png-image-compressor"
                 className="text-white hover:text-gray-300 flex items-center"
               >
                 PNG Compressor <FaChevronDown className="ml-1 mt-1 text-sm" />
-              </a>
+              </Link>
               <ul className="absolute w-44 rounded border-2 border-blue-200 left-0 bg-[#6070B1] text-white shadow-md py-2 mt-1 hidden group-hover:block">
                 <li>
-                  <a href="/" className="block px-4 py-2 hover:bg-[#0C2F55]">
+                  <Link to="/" className="block px-4 py-2 hover:bg-[#0C2F55]">
                     PNG 1MB
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a href="/" className="block px-4 py-2 hover:bg-[#0C2F55]">
+                  <Link to="/" className="block px-4 py-2 hover:bg-[#0C2F55]">
                     PNG 500KB
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a href="/" className="block px-4 py-2 hover:bg-[#0C2F55]">
+                  <Link to="/" className="block px-4 py-2 hover:bg-[#0C2F55]">
                     PNG 200KB
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a href="/" className="block px-4 py-2 hover:bg-[#0C2F55]">
+                  <Link to="/" className="block px-4 py-2 hover:bg-[#0C2F55]">
                     PNG 100KB
-                  </a>
+                  </Link>
                 </li>
               </ul>
             </li>
             <li className="relative group">
-              <a
-                href="/"
+              <Link
+                to="/gif-image-compressor"
                 className="text-white hover:text-gray-300 flex items-center"
               >
                 GIF Compressor <FaChevronDown className="ml-1 mt-1 text-sm" />
-              </a>
+              </Link>
               <ul className="absolute w-44 rounded border-2 border-blue-200 left-0 bg-[#6070B1] shadow-md py-2 mt-1 text-white hidden group-hover:block">
                 <li>
-                  <a href="/" className="block px-4 py-2 hover:bg-[#0C2F55]">
+                  <Link to="/" className="block px-4 py-2 hover:bg-[#0C2F55]">
                     GIF 1MB
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a href="/" className="block px-4 py-2 hover:bg-[#0C2F55]">
+                  <Link to="/" className="block px-4 py-2 hover:bg-[#0C2F55]">
                     GIF 500KB
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a href="/" className="block px-4 py-2 hover:bg-[#0C2F55]">
+                  <Link to="/" className="block px-4 py-2 hover:bg-[#0C2F55]">
                     GIF 200KB
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a href="/" className="block px-4 py-2 hover:bg-[#0C2F55]">
+                  <Link to="/" className="block px-4 py-2 hover:bg-[#0C2F55]">
                     GIF 100KB
-                  </a>
+                  </Link>
                 </li>
               </ul>
             </li>

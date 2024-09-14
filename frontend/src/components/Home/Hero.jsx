@@ -14,9 +14,9 @@ const ImageCompressor = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     const sizeInKB = parseInt(document.getElementById('size-input').value);
-    
+
     if (selectedFile) {
       try {
         const options = {
@@ -34,14 +34,14 @@ const ImageCompressor = () => {
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
-        
+
       } catch (error) {
         console.error('Error compressing image:', error);
       }
     }
   };
 
-  
+
   const buttonNames = [
     "compress image to 4kb",
     "Compress JPEG To 200kb",
@@ -88,43 +88,43 @@ const ImageCompressor = () => {
               Online Image Compressor – Quickly Compress Your Images
             </h1>
             <form onSubmit={handleSubmit}>
-      <div className="border-2 hover:border-dotted border-[#0C2F55] rounded p-4 mb-4 text-center">
-        <input
-          type="file"
-          accept="image/*"
-          className="hidden"
-          id="file-upload"
-          onChange={handleFileChange}
-          required
-        />
-        <p className="mb-6 text-gray-500 text-[18px]">Select Or Drag Images Here</p>
-        <label
-          htmlFor="file-upload"
-          className="cursor-pointer px-6 py-2 bg-[#0C2F55] hover:bg-[#F79422] text-white transition"
-        >
-          Select Images
-        </label>
-      </div>
-      <div className="flex justify-center items-center">
-        <div className="">
-          <label htmlFor="size-input">Size</label>
-          <input
-            id="size-input"
-            type="number"
-            className="border-2 border-[#0C2F55] py-1"
-            placeholder="Enter size in KB"
-            required
-          />
-          <span className="bg-[#0C2f55] text-white p-1 py-2">KB</span>
-        </div>
-        <button
-          type="submit"
-          className="bg-[#0C2F55] hover:scale-105 transition-all duration-300 ml-3 text-white px-3 py-2 rounded-full"
-        >
-          Compress & Download
-        </button>
-      </div>
-    </form>
+              <div className="border-2 hover:border-dotted border-[#0C2F55] rounded p-4 mb-4 text-center">
+                <input
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  id="file-upload"
+                  onChange={handleFileChange}
+                  required
+                />
+                <p className="mb-6 text-gray-500 text-[18px]">Select Or Drag Images Here</p>
+                <label
+                  htmlFor="file-upload"
+                  className="cursor-pointer px-6 py-2 bg-[#0C2F55] hover:bg-[#F79422] text-white transition"
+                >
+                  Select Images
+                </label>
+              </div>
+              <div className="flex justify-center items-center">
+                <div className="">
+                  <label htmlFor="size-input">Size</label>
+                  <input
+                    id="size-input"
+                    type="number"
+                    className="border-2 border-[#0C2F55] py-1"
+                    placeholder="Enter size in KB"
+                    required
+                  />
+                  <span className="bg-[#0C2f55] text-white p-1 py-2">KB</span>
+                </div>
+                <button
+                  type="submit"
+                  className="bg-[#0C2F55] hover:scale-105 transition-all duration-300 ml-3 text-white px-3 py-2 rounded-full"
+                >
+                  Compress & Download
+                </button>
+              </div>
+            </form>
 
             {/* **** Article **** */}
             <div>
