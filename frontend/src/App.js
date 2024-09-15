@@ -8,6 +8,7 @@ import PdfConverter from "./components/pdfconverter/PdfConverter";
 import JpegCompressor from "./components/jpegcompressor/JpegCompressor";
 import PngCompressor from "./components/pngcompressor/PngCompressor";
 import GifCompressor from "./components/gifcompressor/GifCompressor";
+import ResizeArticle from "./components/Resize/ResizeArticle";
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
         <Route path="/" element={<Hero />} />
         <Route path="/dashboard" element={<CreatPost />} />
         <Route path="/resize" element={<Resize />} />
+        <Route path="/resizeReadmore" element={<ResizeArticle />} />
         <Route path="/pdf-converter" element={<PdfConverter />} />
         <Route path="/jpeg-image-compressor" element={<JpegCompressor />} />
         <Route path="/png-image-compressor" element={<PngCompressor />} />

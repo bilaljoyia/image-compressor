@@ -18,7 +18,7 @@ function Header() {
             />
           </div>
           <div className="flex space-x-4">
-          <li>
+            <li>
               <Link to="/" className="text-white hover:text-gray-300">
                 Home
               </Link>
@@ -29,7 +29,10 @@ function Header() {
               </Link>
             </li>
             <li>
-              <Link to="/pdf-converter" className="text-white hover:text-gray-300">
+              <Link
+                to="/pdf-converter"
+                className="text-white hover:text-gray-300"
+              >
                 PDF Converter
               </Link>
             </li>
@@ -128,7 +131,7 @@ function Header() {
             <input
               type="text"
               placeholder="Search"
-              className="w-[200px] sm:w-[200px] text-black hover:w-[300px] 
+              className="w-[200px] sm:w-[200px] text-black hover:w-[250px] 
               transition-all duration-300 border px-2 py-1
                border-gray-400 focus:outline-none focus:border-2 dark:border-gray-500 dark:text-white dark:bg-black focus:border-primary rounded-full"
             />
