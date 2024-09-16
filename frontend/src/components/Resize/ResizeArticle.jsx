@@ -1,41 +1,98 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import FAQSection from "../Home/FAQ";
-import imageCompression from "browser-image-compression";
 import Buttons from "../Buttons";
-import FeaturesResize from "./FeaturesResize";
+import { useParams } from "react-router-dom";
 
 const ResizeArticle = () => {
+  const { articleId } = useParams(); // Get article ID from URL
+  const [article, setArticle] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [selectedFile, setSelectedFile] = useState(null);
-  const [compressedFile, setCompressedFile] = useState(null);
+  const [imageDimensions, setImageDimensions] = useState({
+    width: "",
+    height: "",
+  });
 
   const handleFileChange = (e) => {
-    setSelectedFile(e.target.files[0]);
+    const file = e.target.files[0];
+    setSelectedFile(file);
+
+    if (file) {
+      const reader = new FileReader();
+
+      reader.onload = () => {
+        const img = new Image();
+        img.src = reader.result;
+
+        img.onload = () => {
+          setImageDimensions({
+            width: img.width,
+            height: img.height,
+          });
+        };
+      };
+
+      reader.onerror = (error) => {
+        console.error("Error reading file:", error);
+      };
+
+      reader.readAsDataURL(file); // Read file as Data URL
+    }
   };
+
+
+  // Fetch single article data
+  useEffect(() => {
+    const fetchArticle = async () => {
+      try {
+        const response = await fetch(`http://localhost:5005/api/articles/${articleId}`);
+        const data = await response.json();
+
+        if (response.ok) {
+          setArticle(data);
+        } else {
+          setError(data.message);
+        }
+      } catch (err) {
+        setError("Error fetching article.");
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchArticle();
+  }, [articleId]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const sizeInKB = parseInt(document.getElementById("size-input").value);
+    const width = parseInt(document.getElementById("width-input").value);
+    const height = parseInt(document.getElementById("height-input").value);
 
     if (selectedFile) {
       try {
-        const options = {
-          maxSizeMB: sizeInKB / 1024, // Convert KB to MB
-          useWebWorker: true,
-        };
+        const formData = new FormData();
+        formData.append("image", selectedFile);
+        formData.append("width", width);
+        formData.append("height", height);
 
-        const compressedImage = await imageCompression(selectedFile, options);
-        setCompressedFile(compressedImage);
+        const response = await fetch("http://localhost:5005/resize-image", {
+          method: "POST",
+          body: formData,
+        });
+
+        const blob = await response.blob();
+        const downloadUrl = URL.createObjectURL(blob);
 
         // Trigger download
         const link = document.createElement("a");
-        link.href = URL.createObjectURL(compressedImage);
-        link.download = compressedImage.name;
+        link.href = downloadUrl;
+        link.download = selectedFile.name; // Same filename as original
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
       } catch (error) {
-        console.error("Error compressing image:", error);
+        console.error("Error resizing image:", error);
       }
     }
   };
@@ -45,8 +102,15 @@ const ResizeArticle = () => {
       <div className="container mx-auto">
         <div className="flex gap-5">
           <div className="left-side mb-6 rounded mt-20 bg-white p-5 shadow-md pt-20 flex-grow overflow-auto">
+          <div>
+              {loading ? (
+                <p>Loading article...</p>
+              ) : error ? (
+                <p>Error: {error}</p>
+              ) : article ? (
+                <>
             <h1 className="text-3xl font-semibold mb-52">
-              Online Image Compressor – Quickly Compress Your Images
+              {article.title}
             </h1>
             <form onSubmit={handleSubmit}>
               <div className="border-2 hover:border-dotted border-[#0C2F55] rounded p-4 mb-4 text-center">
@@ -68,81 +132,76 @@ const ResizeArticle = () => {
                   Select Images
                 </label>
               </div>
-              <div className="flex flex-col justify-center items-center">
-                <div className="">
-                  <label htmlFor="size-input" className="text-xl mr-1">
+
+              {/* Width and Height Inputs */}
+              <div className="flex justify-center items-center gap-3">
+                <div>
+                  <label htmlFor="width-input" className="text-xl mr-2">
                     Width:
                   </label>
                   <input
-                    id="size-input"
+                    id="width-input"
                     type="number"
-                    className="border-2 border-[#0C2F55] py-1"
-                    placeholder="Enter size in KB"
+                    className="border-2 border-[#0C2F55] py-1 px-2"
+                    value={imageDimensions.width}
+                    onChange={(e) =>
+                      setImageDimensions({
+                        ...imageDimensions,
+                        width: e.target.value,
+                      })
+                    }
                     required
                   />
-                  <span className="bg-[#0C2f55] text-white p-1 py-2">px</span>
+                  <span className="ml-2">px</span>
+                </div>
 
-                  <label htmlFor="size-input" className="text-xl mr-1">
+                <div>
+                  <label htmlFor="height-input" className="text-xl mr-2">
                     Height:
                   </label>
                   <input
-                    id="size-input"
+                    id="height-input"
                     type="number"
-                    className="border-2 border-[#0C2F55] py-1"
-                    placeholder="Enter size in KB"
+                    className="border-2 border-[#0C2F55] py-1 px-2"
+                    value={imageDimensions.height}
+                    onChange={(e) =>
+                      setImageDimensions({
+                        ...imageDimensions,
+                        height: e.target.value,
+                      })
+                    }
                     required
                   />
-                  <span className="bg-[#0C2f55] text-white p-1 py-2">px</span>
+                  <span className="ml-2">px</span>
                 </div>
-                <div className="mt-5 ml-10">
-                  <button
-                    type="submit"
-                    className="bg-[#0C2F55] hover:scale-105 transition-all duration-300 ml-3 text-white px-7 py-2 rounded-full"
-                  >
-                    Risze
-                  </button>
-                  <button
-                    type="submit"
-                    className="bg-[#0C2F55] hover:scale-105 transition-all duration-300 ml-3 text-white px-7 py-2 rounded-full"
-                  >
-                    Download
-                  </button>
-                </div>
+              </div>
+
+              {/* Submit and Download Buttons */}
+              <div className="mt-5 flex justify-center">
+                <button
+                  type="submit"
+                  className="mb-5 bg-[#0C2F55] hover:scale-105 transition-all duration-300 text-white px-7 py-2 rounded-full"
+                >
+                  Resize and Download
+                </button>
               </div>
             </form>
 
             {/* **** Article **** */}
-            <div>
-              <p className="mt-36 text-xl p-4">
-                Image compressor is a tool that compress or reduce the size of
-                an image. While on the other hand, online image compressor is an
-                online tool that reduce the image size online. In addition, it
-                can compress any kind of image type like{" "}
-                <span className="text-[#F79422]">JPG, JPEG, PNG,</span> etc. Our
-                online photo compressor tool is made using latest algorithms and
-                techniques. Moreover, it won’t decrease the image quality.
-              </p>
-
-              <h1 className="font-bold text-3xl text-[#F79422] mt-36 text-center">
-                Online Image Compressor Tool
-              </h1>
-              <p className="text-xl p-4 mt-5">
-                Online compress jpeg tool is used to compress or reduce the
-                photo size online. It is made up with the latest optimization
-                algorithms. It reduce or shrink the images with type of .JPG,
-                .JPEG, .PNG, and .GIF to the possible required file size without
-                loosing its quality. In addition, the compression with
-                CompressKaru.com is very easy and simple. It also provides the
-                best compressed image quality and accuracy. There is no maximum
-                image upload size boundary. It means that you can upload any
-                image with the maximum file size. Additionally, Photo compressor
-                make the digital photo like a characteristics of a physical
-                image with possible minimum file size. If we talk on image
-                quality, out tool will not loos the image qulity or pixels.
-              </p>
+            
+                  <div
+                    className="article-content mt-7"
+                    dangerouslySetInnerHTML={{ __html: article.discripition }}
+                  />
+                </>
+              ) : (
+                <p>No article found.</p>
+              )}
             </div>
             <FAQSection />
           </div>
+
+          
           <Buttons />
         </div>
       </div>

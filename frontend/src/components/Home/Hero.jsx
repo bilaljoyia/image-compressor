@@ -8,9 +8,11 @@ import Buttons from "../Buttons";
 const ImageCompressor = () => {
   const [selectedFile, setSelectedFile] = useState(null);
   const [compressedFile, setCompressedFile] = useState(null);
+  const [compressedFileURL, setCompressedFileURL] = useState(null);
 
   const handleFileChange = (e) => {
     setSelectedFile(e.target.files[0]);
+    setCompressedFile(null); // Reset compressed file when new image is selected
   };
 
   const handleSubmit = async (e) => {
@@ -27,20 +29,12 @@ const ImageCompressor = () => {
 
         const compressedImage = await imageCompression(selectedFile, options);
         setCompressedFile(compressedImage);
-
-        // Trigger download
-        const link = document.createElement("a");
-        link.href = URL.createObjectURL(compressedImage);
-        link.download = compressedImage.name;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
+        setCompressedFileURL(URL.createObjectURL(compressedImage));
       } catch (error) {
         console.error("Error compressing image:", error);
       }
     }
   };
-
   const buttonNames = [
     "compress image to 4kb",
     "Compress JPEG To 200kb",
@@ -86,6 +80,28 @@ const ImageCompressor = () => {
             <h1 className="text-3xl font-semibold mb-52">
               Online Image Compressor – Quickly Compress Your Images
             </h1>
+
+            {/* Image Preview Section */}
+            <div className="mb-4 text-center">
+              {selectedFile && (
+                <div className="flex justify-center mb-6">
+                  <img
+                    src={URL.createObjectURL(selectedFile)}
+                    alt="Selected"
+                    className="w-24 h-24 object-cover border-2 border-[#0C2F55] rounded"
+                  />
+                  <span className="mx-4 text-3xl font-bold">vs</span>
+                  {compressedFile && (
+                    <img
+                      src={compressedFileURL}
+                      alt="Compressed"
+                      className="w-24 h-24 object-cover border-2 border-[#F79422] rounded"
+                    />
+                  )}
+                </div>
+              )}
+            </div>
+
             <form onSubmit={handleSubmit}>
               <div className="border-2 hover:border-dotted border-[#0C2F55] rounded p-4 mb-4 text-center">
                 <input
@@ -124,14 +140,21 @@ const ImageCompressor = () => {
                 >
                   Compress
                 </button>
-                <button
-                  type="submit"
-                  className="bg-[#0C2F55] hover:scale-105 transition-all duration-300 ml-3 text-white px-7 py-2 rounded-full"
-                >
-                  Download
-                </button>
               </div>
             </form>
+
+            {/* Download Button */}
+            {compressedFile && (
+              <div className="text-center mt-6">
+                <a
+                  href={compressedFileURL}
+                  download={compressedFile.name}
+                  className="bg-[#F79422] hover:bg-[#0C2F55] text-white px-6 py-2 rounded-full"
+                >
+                  Download Compressed Image
+                </a>
+              </div>
+            )}
 
             {/* **** Article **** */}
             <div>
@@ -148,6 +171,8 @@ const ImageCompressor = () => {
               <h1 className="font-bold text-3xl text-[#F79422] mt-36 text-center">
                 Online Image Compressor Tool
               </h1>
+              <br/>
+                <br/>
               <p className="text-xl p-4 mt-5">
                 Online compress jpeg tool is used to compress or reduce the
                 photo size online. It is made up with the latest optimization
@@ -155,7 +180,12 @@ const ImageCompressor = () => {
                 .JPEG, .PNG, and .GIF to the possible required file size without
                 loosing its quality. In addition, the compression with
                 CompressKaru.com is very easy and simple. It also provides the
-                best compressed image quality and accuracy. There is no maximum
+                best compressed image quality and accuracy. 
+                
+                <br/>
+                <br/>
+              
+                There is no maximum
                 image upload size boundary. It means that you can upload any
                 image with the maximum file size. Additionally, Photo compressor
                 make the digital photo like a characteristics of a physical

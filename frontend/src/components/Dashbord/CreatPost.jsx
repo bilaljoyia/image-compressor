@@ -3,11 +3,20 @@ import JoditEditor from 'jodit-react';
 
 function CreatPost() {
   const editor = useRef(null);
-  const [content, setContent] = useState('');  // For handling description
+  const [content, setContent] = useState(''); // For handling description
   const [handle, setHandle] = useState({
     category: '',
     title: '',
   });
+  const [categories, setCategories] = useState([
+    'Pdf-Converter',
+    'Resize-card',
+    'JPED Compressor',
+    'PNG Compressor',
+    'GIF Compressor',
+  ]);
+  const [newCategory, setNewCategory] = useState('');
+  const [showAddCategory, setShowAddCategory] = useState(false);
 
   // Handle input fields
   const handleInput = (e) => {
@@ -15,13 +24,25 @@ function CreatPost() {
     setHandle({ ...handle, [name]: value });
   };
 
+  // Handle adding new category
+  const handleAddCategory = () => {
+    if (newCategory && !categories.includes(newCategory)) {
+      setCategories([...categories, newCategory]);
+      setHandle({ ...handle, category: newCategory }); // Set the new category as selected
+      setNewCategory(''); // Reset new category input
+      setShowAddCategory(false); // Hide input after adding
+    } else {
+      alert('Category already exists or input is empty');
+    }
+  };
+
   // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     const postData = {
       ...handle,
-      discripition: content  // Adding the JoditEditor content
+      discripition: content, // Adding the JoditEditor content
     };
 
     try {
@@ -67,18 +88,55 @@ function CreatPost() {
           />
         </div>
 
+        {/* Category Dropdown */}
         <div className="input-group">
-          <input
+          <select
             name="category"
-            type="text"
             value={handle.category}
             onChange={handleInput}
-            placeholder="Category"
             className="input-field"
             required
-          />
+          >
+            <option value="" disabled>Select Category</option>
+            {categories.map((category, index) => (
+              <option key={index} value={category}>
+                {category}
+              </option>
+            ))}
+          </select>
+
+          {/* Add New Category Button */}
+          <button
+            type="button"
+            className="add-category-button"
+            onClick={() => setShowAddCategory(!showAddCategory)}
+          >
+            {showAddCategory ? 'Cancel' : 'Add New Category'}
+          </button>
         </div>
 
+        {/* Input for adding new category */}
+        {showAddCategory && (
+          <div className="input-group add-category-input">
+            <input
+              type="text"
+              placeholder="New Category"
+              value={newCategory}
+              onChange={(e) => setNewCategory(e.target.value)}
+              className="input-field"
+              autoFocus
+            />
+            <button
+              type="button"
+              className="submit-button mt-3"
+              onClick={handleAddCategory}
+            >
+              Add
+            </button>
+          </div>
+        )}
+
+        {/* Jodit Editor for Description */}
         <div className="editor-container">
           <JoditEditor
             ref={editor}
@@ -88,7 +146,9 @@ function CreatPost() {
         </div>
 
         <div className="input-group">
-          <button type="submit" className="submit-button">Post</button>
+          <button type="submit" className="submit-button">
+            Post
+          </button>
         </div>
       </form>
     </div>
