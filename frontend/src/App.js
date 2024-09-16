@@ -9,7 +9,9 @@ import JpegCompressor from "./components/jpegcompressor/JpegCompressor";
 import PngCompressor from "./components/pngcompressor/PngCompressor";
 import GifCompressor from "./components/gifcompressor/GifCompressor";
 import ResizeArticle from "./components/Resize/ResizeArticle";
-import JpegArticle from "./components/jpegcompressor/JpegArticle";
+import JpegCompressorarticle from "./components/jpegcompressor/JpegCompressorarticle";
+import PngCompressorarticle from "./components/pngcompressor/PngCompressorarticle";
+import GifCompressorarticle from "./components/gifcompressor/GifCompressorarticle";
 
 function App() {
   return (
@@ -18,13 +20,29 @@ function App() {
       <Routes>
         <Route path="/" element={<Hero />} />
         <Route path="/dashboard" element={<CreatPost />} />
+
         <Route path="/resize" element={<Resize />} />
-        <Route path="/resizeReadmore" element={<ResizeArticle />} />
+        <Route path="/resizeReadmore/:articleId" element={<ResizeArticle />} />
+
         <Route path="/pdf-converter" element={<PdfConverter />} />
+
         <Route path="/jpeg-image-compressor" element={<JpegCompressor />} />
-        <Route path="/gpeg-compressor" element={<JpegArticle />} />
+        <Route
+          path="/jpeg-imagecompressor/:articleId"
+          element={<JpegCompressorarticle />}
+        />
+
         <Route path="/png-image-compressor" element={<PngCompressor />} />
+        <Route
+          path="/png-imagecompressor/:articleId"
+          element={<PngCompressorarticle />}
+        />
+
         <Route path="/gif-image-compressor" element={<GifCompressor />} />
+        <Route
+          path="/gif-imagecompressor/:articleId"
+          element={<GifCompressorarticle />}
+        />
       </Routes>
       <Footer />
     </Router>
