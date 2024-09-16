@@ -19,7 +19,6 @@ app.use(cors());
 
 const port = process.env.PORT || 5005;
 
-
 // Helper function to delete temp files
 const deleteFile = (filePath) => {
   fs.unlink(filePath, (err) => {
@@ -30,6 +29,7 @@ const deleteFile = (filePath) => {
     }
   });
 };
+
 // Connect to MongoDB
 mongoose.connect(process.env.MONGO_URI)
   .then(() => {
@@ -54,6 +54,7 @@ app.post('/api/articles', async (req, res) => {
     res.status(500).json({ message: 'Error posting article', error: err.message });
   }
 });
+
 // Route to get all articles
 app.get('/api/articles', async (req, res) => {
   try {
@@ -79,6 +80,7 @@ app.get('/api/articles/:id', async (req, res) => {
     res.status(500).json({ message: 'Error fetching article', error: err.message });
   }
 });
+
 // Route to get articles by category
 app.get('/api/articles/category/:category', async (req, res) => {
   try {
@@ -93,7 +95,6 @@ app.get('/api/articles/category/:category', async (req, res) => {
   }
 });
 
-
 // Multer setup for file uploads (storing in memory instead of filesystem)
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
@@ -103,20 +104,20 @@ app.post('/compress-image', upload.single('image'), async (req, res) => {
   const sizeInKB = parseInt(req.body.size);
   const maxSizeBytes = sizeInKB * 1024; // KB to Bytes
   const imageBuffer = req.file.buffer;
-  
+
   try {
+    let quality = 100; // Start with high quality
     let compressedImageBuffer = await sharp(imageBuffer)
       .resize({ width: 800 }) // Adjust dimensions as needed
+      .jpeg({ quality }) // Reduce JPEG quality gradually
       .toBuffer();
 
-    // Check size and adjust quality to meet the target size
-    let quality = 100; // Start with high quality
     while (compressedImageBuffer.length > maxSizeBytes && quality > 0) {
+      quality -= 5; // Decrease quality by 5% increments
       compressedImageBuffer = await sharp(imageBuffer)
         .resize({ width: 800 })
         .jpeg({ quality }) // Reduce JPEG quality gradually
         .toBuffer();
-      quality -= 5; // Decrease quality by 5% increments
     }
 
     // Send the compressed image directly back to the client
@@ -151,27 +152,23 @@ app.post('/resize-image', upload.single('image'), async (req, res) => {
 
 app.post('/convert-image-to-pdf', upload.single('image'), async (req, res) => {
   try {
-    // Ensure the image buffer exists
     if (!req.file || !req.file.buffer) {
       return res.status(400).send('No image file provided');
     }
 
     const imageBuffer = req.file.buffer;
 
-    // Use sharp to handle image conversion to PNG with higher quality
     const optimizedImageBuffer = await sharp(imageBuffer)
-      .resize(600, 800, { fit: 'inside', kernel: sharp.kernel.lanczos3 }) // Resize using high-quality interpolation
-      .png({ compressionLevel: 0, quality: 100 }) // Ensure minimal compression and highest quality
+      .resize(600, 800, { fit: 'inside', kernel: sharp.kernel.lanczos3 })
+      .png({ compressionLevel: 0, quality: 100 })
       .toBuffer();
 
     const pdfDoc = await PDFDocument.create();
     const page = pdfDoc.addPage([600, 800]);
 
-    // Embed the optimized PNG image in the PDF
     const image = await pdfDoc.embedPng(optimizedImageBuffer);
-    const { width, height } = image.scale(1); // Scale the image
+    const { width, height } = image.scale(1);
 
-    // Draw the image on the PDF page
     page.drawImage(image, {
       x: 0,
       y: page.getHeight() - height,
@@ -179,7 +176,6 @@ app.post('/convert-image-to-pdf', upload.single('image'), async (req, res) => {
       height,
     });
 
-    // Save the PDF and send it to the client
     const pdfBytes = await pdfDoc.save();
     res.set('Content-Type', 'application/pdf');
     res.set('Content-Disposition', `attachment; filename=image_${Date.now()}.pdf`);
@@ -191,7 +187,56 @@ app.post('/convert-image-to-pdf', upload.single('image'), async (req, res) => {
   }
 });
 
+app.post('/convert-image-to-webp', upload.single('image'), async (req, res) => {
+  const imageBuffer = req.file.buffer;
 
+  try {
+    const webpImageBuffer = await sharp(imageBuffer)
+      .webp() // Convert to webp without adjusting quality
+      .toBuffer();
+
+    res.set('Content-Type', 'image/webp');
+    res.set('Content-Disposition', `attachment; filename=converted_image_${Date.now()}.webp`);
+    res.send(webpImageBuffer);
+  } catch (error) {
+    console.error('Error converting image to WebP:', error);
+    res.status(500).send('Error processing image');
+  }
+});
+
+app.post('/convert-image-to-png', upload.single('image'), async (req, res) => {
+  const imageBuffer = req.file.buffer;
+
+  try {
+    const pngImageBuffer = await sharp(imageBuffer)
+      .png() // Convert to PNG without adjusting compression
+      .toBuffer();
+
+    res.set('Content-Type', 'image/png');
+    res.set('Content-Disposition', `attachment; filename=converted_${Date.now()}.png`);
+    res.send(pngImageBuffer);
+  } catch (error) {
+    console.error('Error converting image to PNG:', error);
+    res.status(500).send('Error processing image');
+  }
+});
+
+app.post('/convert-image-to-jpg', upload.single('image'), async (req, res) => {
+  const imageBuffer = req.file.buffer;
+
+  try {
+    const jpgImageBuffer = await sharp(imageBuffer)
+      .jpeg() // Convert to JPEG without adjusting quality
+      .toBuffer();
+
+    res.set('Content-Type', 'image/jpeg');
+    res.set('Content-Disposition', `attachment; filename=converted_${Date.now()}.jpg`);
+    res.send(jpgImageBuffer);
+  } catch (error) {
+    console.error('Error converting image to JPG:', error);
+    res.status(500).send('Error processing image');
+  }
+});
 
 // Start the server
 app.listen(port, () => {

@@ -12,6 +12,7 @@ import ResizeArticle from "./components/Resize/ResizeArticle";
 import JpegCompressorarticle from "./components/jpegcompressor/JpegCompressorarticle";
 import PngCompressorarticle from "./components/pngcompressor/PngCompressorarticle";
 import GifCompressorarticle from "./components/gifcompressor/GifCompressorarticle";
+import ImageCoverter from "./components/WebConvert/ImageCoverter";
 
 function App() {
   return (
@@ -34,6 +35,8 @@ function App() {
 
         <Route path="/gif-image-compressor" element={<GifCompressor />} />
         <Route path="/gif-imagecompressor/:articleId" element={<GifCompressorarticle />} />
+
+        <Route path="/web-converter" element={<ImageCoverter />} />
       </Routes>
       <Footer />
     </Router>
