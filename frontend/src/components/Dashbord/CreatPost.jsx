@@ -2,6 +2,15 @@ import React, { useEffect, useState } from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { Link, useParams, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import {
+  FaHome,
+  FaNewspaper,
+  FaFileAlt,
+  FaImage,
+  FaExchangeAlt,
+} from "react-icons/fa";
+import SidebarItem from "../Dashbord/Sidebar";
 
 function CreatPost() {
   const [content, setContent] = useState("");
@@ -23,7 +32,12 @@ function CreatPost() {
     toolbar: [
       [{ header: [1, 2, false] }],
       ["bold", "italic", "underline", "strike", "blockquote"],
-      [{ list: "ordered" }, { list: "bullet" }, { indent: "-1" }, { indent: "+1" }],
+      [
+        { list: "ordered" },
+        { list: "bullet" },
+        { indent: "-1" },
+        { indent: "+1" },
+      ],
       [{ color: [] }, { background: [] }],
       [{ font: [] }],
       [{ align: [] }],
@@ -55,7 +69,9 @@ function CreatPost() {
       // If ID is present, fetch article data for editing
       const fetchArticle = async () => {
         try {
-          const response = await fetch(`http://localhost:5005/api/articles/${id}`);
+          const response = await fetch(
+            `http://localhost:5005/api/articles/${id}`
+          );
           const data = await response.json();
           setHandle({ category: data.category, title: data.title });
           setContent(data.discripition); // Assuming the field name is `discripition`
@@ -93,18 +109,33 @@ function CreatPost() {
 
     try {
       const method = id ? "PUT" : "POST"; // Use PUT if editing existing article
-      const response = await fetch(`http://localhost:5005/api/articles${id ? `/${id}` : ''}`, {
-        method,
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(postData),
-      });
+      const response = await fetch(
+        `http://localhost:5005/api/articles${id ? `/${id}` : ""}`,
+        {
+          method,
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(postData),
+        }
+      );
 
       const data = await response.json();
 
       if (response.ok) {
-        alert(id ? "Article updated successfully!" : "Article posted successfully!");
+        toast(
+          id ? "Article updated successfully!" : "Article posted successfully!",
+          {
+            position: "top-right",
+            autoClose: 2000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+          }
+        );
         navigate("/articles"); // Redirect to articles list after submission
       } else {
         alert("Error: " + data.message);
@@ -116,29 +147,23 @@ function CreatPost() {
 
   return (
     <div className="bg-gray-900 min-h-screen flex">
-      {/* Sidebar */}
-      <div className="w-1/4 bg-gray-800 p-6">
-        <h2 className="text-2xl font-semibold text-white mb-6">Navigation</h2>
-        <ul>
-          <li className="mb-4">
-            <Link to="/dashboard" className="text-lg text-white hover:text-indigo-300">
-              Home
-            </Link>
-          </li>
-          <li>
-            <Link
-              to="/articles"
-              className="text-lg text-white hover:text-indigo-300"
-            >
-              Articles
-            </Link>
-          </li>
-        </ul>
+      {/* Enhanced Sidebar */}
+      <div className="w-64 bg-gradient-to-b from-gray-800 to-gray-900 text-white h-screen overflow-y-auto">
+        <div className="p-6">
+          <h2 className="text-3xl font-bold mb-8 text-indigo-300">Dashboard</h2>
+          <nav>
+            <ul className="space-y-2">
+              <SidebarItem to="/dashboard" icon={<FaHome />} text="Home" />
+              <SidebarItem to="/articles" icon={<FaNewspaper />} text="Post" />
+            </ul>
+          </nav>
+        </div>
       </div>
 
       {/* Main Content */}
-      <div className="w-5/6 pl-14">
-        <div className="max-w-6xl mx-auto px-4 py-8">
+
+      <div className="flex-1 p-8">
+        <div className="max-w-4xl mx-auto">
           <h1 className="text-3xl font-bold text-white mb-8">Dashboard</h1>
           <div className="bg-gray-800 rounded-lg shadow-xl overflow-hidden">
             <div className="px-6 py-4 bg-gradient-to-r from-indigo-600 to-purple-600">
@@ -241,13 +266,13 @@ function CreatPost() {
               <div className="flex justify-end space-x-4">
                 <button
                   type="submit"
-                  className="px-6 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition duration-300"
+                  className="px-6 py-2 mt-3 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition duration-300"
                 >
                   {id ? "Update Post" : "Create Post"}
                 </button>
                 <button
                   type="button"
-                  className="px-6 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 transition duration-300"
+                  className="px-6 py-2 mt-3 bg-gray-600 text-white rounded-md hover:bg-gray-700 transition duration-300"
                   onClick={() => navigate("/articles")}
                 >
                   Cancel
@@ -260,5 +285,4 @@ function CreatPost() {
     </div>
   );
 }
-
 export default CreatPost;
