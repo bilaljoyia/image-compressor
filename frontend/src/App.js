@@ -13,6 +13,7 @@ import JpegCompressorarticle from "./components/jpegcompressor/JpegCompressorart
 import PngCompressorarticle from "./components/pngcompressor/PngCompressorarticle";
 import GifCompressorarticle from "./components/gifcompressor/GifCompressorarticle";
 import ImageCoverter from "./components/WebConvert/ImageCoverter";
+import Articles from "./components/Dashbord/Articles";
 
 function App() {
   return (
@@ -21,6 +22,8 @@ function App() {
       <Routes>
         <Route path="/" element={<Hero />} />
         <Route path="/dashboard" element={<CreatPost />} />
+        <Route path="/articles" element={<Articles />} />
+        <Route path="/edit-article/:id" element={<CreatPost />} />
 
         <Route path="/resize" element={<Resize />} />
         <Route path="/resizeReadmore/:articleId" element={<ResizeArticle />} />

@@ -72,6 +72,54 @@ app.get("/api/articles", async (req, res) => {
   }
 });
 
+
+// Route to update an article by ID
+app.put("/api/articles/:id", async (req, res) => {
+  try {
+    const articleId = req.params.id;
+    const { category, title, discripition } = req.body;
+    
+    const updatedArticle = await ArticalPost.findByIdAndUpdate(
+      articleId,
+      { category, title, discripition },
+      { new: true } // Return the updated document
+    );
+
+    if (!updatedArticle) {
+      return res.status(404).json({ message: "Article not found" });
+    }
+
+    res.status(200).json({
+      message: "Article updated successfully",
+      article: updatedArticle,
+    });
+  } catch (err) {
+    res.status(500).json({
+      message: "Error updating article",
+      error: err.message,
+    });
+  }
+});
+
+// Route to delete an article by ID
+app.delete("/api/articles/:id", async (req, res) => {
+  try {
+    const articleId = req.params.id;
+    const deletedArticle = await ArticalPost.findByIdAndDelete(articleId);
+
+    if (!deletedArticle) {
+      return res.status(404).json({ message: "Article not found" });
+    }
+
+    res.status(200).json({ message: "Article deleted successfully" });
+  } catch (err) {
+    res.status(500).json({
+      message: "Error deleting article",
+      error: err.message,
+    });
+  }
+});
+
 // Route to get a single article by ID
 app.get("/api/articles/:id", async (req, res) => {
   try {

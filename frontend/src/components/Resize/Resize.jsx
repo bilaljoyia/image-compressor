@@ -29,29 +29,39 @@ function Resize() {
     fetchArticles();
   }, []);
 
+  // Get the first article if available
+  const firstArticle = articles.length > 0 ? articles[0] : null;
+
   return (
     <div>
       <section className="bg-gray-100">
         <div className="container mx-auto">
           <div className="flex gap-5">
             <div className="left-side mb-6 rounded mt-20 bg-white p-5 shadow-md pt-20 flex-grow overflow-auto">
-              {/* **** Show Articles **** */}
+              {/* **** Show Article **** */}
               {loading ? (
-                <p>Loading articles...</p>
+                <p>Loading article...</p>
               ) : error ? (
                 <p>Error: {error}</p>
-              ) : (
-                articles.map((article) => (
-                  <div key={article._id}>
-                    <h1 className="text-3xl font-semibold mb-10">{article.title}</h1>
-                    <div className="mt-10 text-xl p-4">
-                      {/* Rendering HTML safely */}
-                      <div dangerouslySetInnerHTML={{ __html: article.discripition }} />
-                    </div>
+              ) : firstArticle ? (
+                <div>
+                  <h1 className="text-3xl font-semibold mb-10">
+                    {firstArticle.title}
+                  </h1>
+                  <div className="mt-10 text-xl p-4">
+                    {/* Rendering HTML safely */}
+                    <div
+                      dangerouslySetInnerHTML={{
+                        __html: firstArticle.discripition,
+                      }}
+                    />
                   </div>
-                ))
+                </div>
+              ) : (
+                <p>No articles available</p>
               )}
 
+              {/* Other Components */}
               <FeaturesResize />
               <FAQSection />
             </div>

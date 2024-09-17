@@ -10,7 +10,7 @@ function ImageCoverter() {
             <section className="bg-gray-100">
                 <div className="container mx-auto">
                     <div className="flex gap-5">
-                        <div className="left-side mb-6 rounded  p-5 shadow-md flex-grow overflow-auto">
+                        <div className="left-side mb-6 rounded  p-5 shadow-md bg-white flex-grow overflow-auto">
                             <FeatureimageCoverter />
                             <FAQSection />
                         </div>

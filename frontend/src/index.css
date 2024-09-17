@@ -38,3 +38,23 @@ html {
 .ql-editor {
   min-height: 100%;
 }
+
+/* styles.css */
+
+.ql-container {
+  background-color: white; /* Editor ka background white */
+}
+
+.ql-editor {
+  background-color: white; /* Editor ka text area white */
+  color: black; /* Text color black, taake white background par clearly visible ho */
+}
+
+.ql-toolbar {
+  background-color: #f1f1f1; /* Toolbar ka background color light gray */
+}
+
+/* Optional: toolbar aur editor ke border colors */
+.ql-container, .ql-toolbar {
+  border-color: #ddd; /* Border color light gray */
+}
