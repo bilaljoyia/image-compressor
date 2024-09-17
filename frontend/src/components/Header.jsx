@@ -1,12 +1,10 @@
 import React, { useState } from "react";
 import { IoMdSearch } from "react-icons/io";
-
 import { FaSearch, FaChevronDown } from "react-icons/fa";
 import { Link } from "react-router-dom";
 
 function Header() {
   const [isSearchActive, setIsSearchActive] = useState(false);
-
   return (
     <header className="bg-[#0C2F55] py-4">
       <nav>
@@ -17,7 +15,7 @@ function Header() {
               alt="Logo"
             />
           </div>
-          <div className="flex space-x-4">
+          <div className="flex space-x-9">
             <li>
               <Link to="/" className="text-white hover:text-gray-300">
                 Home
@@ -126,16 +124,6 @@ function Header() {
                 </li>
               </ul>
             </li>
-          </div>
-          <div className="group relative">
-            <input
-              type="text"
-              placeholder="Search"
-              className="w-[200px] sm:w-[200px] text-black hover:w-[250px] 
-              transition-all duration-300 border px-2 py-1
-               border-gray-400 focus:outline-none focus:border-2 dark:border-gray-500 dark:text-white dark:bg-black focus:border-primary rounded-full"
-            />
-            <IoMdSearch className="absolute right-2 text-xl hover:text-primary top-2 text-black" />
           </div>
         </ul>
       </nav>

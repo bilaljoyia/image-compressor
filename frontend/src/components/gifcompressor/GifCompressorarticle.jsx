@@ -13,7 +13,7 @@ function GifCompressorarticle() {
   useEffect(() => {
     const fetchArticle = async () => {
       try {
-        const response = await fetch(`http://localhost:5005/api/articles/${articleId}`);
+        const response = await fetch(`https://backendimagecompressor.bahrainindustrial.com/api/articles/${articleId}`);
         const data = await response.json();
 
         if (response.ok) {

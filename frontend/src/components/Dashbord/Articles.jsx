@@ -11,7 +11,7 @@ function Articles() {
     // Fetch articles from backend
     const fetchArticles = async () => {
       try {
-        const response = await fetch("http://localhost:5005/api/articles");
+        const response = await fetch("https://backendimagecompressor.bahrainindustrial.com/api/articles");
         const data = await response.json();
         setArticles(data);
       } catch (error) {
@@ -26,7 +26,7 @@ function Articles() {
     if (window.confirm("Are you sure you want to delete this article?")) {
       try {
         const response = await fetch(
-          `http://localhost:5005/api/articles/${id}`,
+          `https://backendimagecompressor.bahrainindustrial.com/api/articles/${id}`,
           {
             method: "DELETE",
           }

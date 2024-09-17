@@ -15,7 +15,7 @@ function FeatureimageCoverter() {
     useEffect(() => {
         const fetchArticles = async () => {
             try {
-                const response = await fetch('http://localhost:5005/api/articles/category/Image Converter');
+                const response = await fetch('https://backendimagecompressor.bahrainindustrial.com/api/articles/category/Image Converter');
                 const data = await response.json();
 
                 if (response.ok) {
@@ -78,7 +78,7 @@ function FeatureimageCoverter() {
         else if (format === 'jpg') endpoint = '/convert-image-to-jpg';
 
         try {
-            const response = await fetch(`http://localhost:5005/api/articles${endpoint}`, {
+            const response = await fetch(`https://backendimagecompressor.bahrainindustrial.com/api/articles${endpoint}`, {
                 method: 'POST',
                 body: formData,
             });
@@ -198,5 +198,5 @@ function FeatureimageCoverter() {
         </section>
     );
 }
-
+ 
 export default FeatureimageCoverter;

@@ -70,7 +70,7 @@ function CreatPost() {
       const fetchArticle = async () => {
         try {
           const response = await fetch(
-            `http://localhost:5005/api/articles/${id}`
+            `https://backendimagecompressor.bahrainindustrial.com/api/articles/${id}`
           );
           const data = await response.json();
           setHandle({ category: data.category, title: data.title });
@@ -110,7 +110,7 @@ function CreatPost() {
     try {
       const method = id ? "PUT" : "POST"; // Use PUT if editing existing article
       const response = await fetch(
-        `http://localhost:5005/api/articles${id ? `/${id}` : ""}`,
+        `https://backendimagecompressor.bahrainindustrial.com/api/articles${id ? `/${id}` : ""}`,
         {
           method,
           headers: {
