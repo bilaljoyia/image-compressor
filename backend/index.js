@@ -1,14 +1,14 @@
-const express = require('express');
-const mongoose = require('mongoose');
-const cors = require('cors');
-const ArticalPost = require('./Model/Artical');
-require('dotenv').config();
-const multer = require('multer');
-const sharp = require('sharp');
-const path = require('path');
-const fs = require('fs');
-const os = require('os');
-const { PDFDocument, rgb } = require('pdf-lib'); // Add this line for PDF creation
+const express = require("express");
+const mongoose = require("mongoose");
+const cors = require("cors");
+const ArticalPost = require("./Model/Artical");
+require("dotenv").config();
+const multer = require("multer");
+const sharp = require("sharp");
+const path = require("path");
+const fs = require("fs");
+const os = require("os");
+const { PDFDocument, rgb } = require("pdf-lib"); // Add this line for PDF creation
 const tmpDir = os.tmpdir();
 
 const app = express();
@@ -31,67 +31,81 @@ const deleteFile = (filePath) => {
 };
 
 // Connect to MongoDB
-mongoose.connect(process.env.MONGO_URI)
+mongoose
+  .connect(process.env.MONGO_URI)
   .then(() => {
-    console.log('MongoDB connected');
+    console.log("MongoDB connected");
   })
   .catch((err) => {
-    console.error('MongoDB connection error:', err);
+    console.error("MongoDB connection error:", err);
   });
 
 // Route to post a new article
-app.post('/api/articles', async (req, res) => {
+app.post("/api/articles", async (req, res) => {
   try {
     const { category, title, discripition } = req.body;
     const newArtical = new ArticalPost({
       category,
       title,
-      discripition
+      discripition,
     });
     await newArtical.save();
-    res.status(201).json({ message: 'Article posted successfully', article: newArtical });
+    res
+      .status(201)
+      .json({ message: "Article posted successfully", article: newArtical });
   } catch (err) {
-    res.status(500).json({ message: 'Error posting article', error: err.message });
+    res
+      .status(500)
+      .json({ message: "Error posting article", error: err.message });
   }
 });
 
 // Route to get all articles
-app.get('/api/articles', async (req, res) => {
+app.get("/api/articles", async (req, res) => {
   try {
     const articles = await ArticalPost.find(); // Fetch all articles from the database
     res.status(200).json(articles); // Return the list of articles
   } catch (err) {
-    res.status(500).json({ message: 'Error fetching articles', error: err.message });
+    res
+      .status(500)
+      .json({ message: "Error fetching articles", error: err.message });
   }
 });
 
 // Route to get a single article by ID
-app.get('/api/articles/:id', async (req, res) => {
+app.get("/api/articles/:id", async (req, res) => {
   try {
     const articleId = req.params.id;
     const article = await ArticalPost.findById(articleId); // Find article by ID
 
     if (!article) {
-      return res.status(404).json({ message: 'Article not found' });
+      return res.status(404).json({ message: "Article not found" });
     }
 
     res.status(200).json(article); // Return the article
   } catch (err) {
-    res.status(500).json({ message: 'Error fetching article', error: err.message });
+    res
+      .status(500)
+      .json({ message: "Error fetching article", error: err.message });
   }
 });
 
 // Route to get articles by category
-app.get('/api/articles/category/:category', async (req, res) => {
+app.get("/api/articles/category/:category", async (req, res) => {
   try {
     const category = req.params.category;
     const articles = await ArticalPost.find({ category }); // Find articles by category
     if (articles.length === 0) {
-      return res.status(404).json({ message: 'No articles found in this category' });
+      return res
+        .status(404)
+        .json({ message: "No articles found in this category" });
     }
     res.status(200).json(articles);
   } catch (err) {
-    res.status(500).json({ message: 'Error fetching articles by category', error: err.message });
+    res.status(500).json({
+      message: "Error fetching articles by category",
+      error: err.message,
+    });
   }
 });
 
@@ -100,7 +114,7 @@ const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
 // Endpoint to compress and download the image
-app.post('/compress-image', upload.single('image'), async (req, res) => {
+app.post("/compress-image", upload.single("image"), async (req, res) => {
   const sizeInKB = parseInt(req.body.size);
   const maxSizeBytes = sizeInKB * 1024; // KB to Bytes
   const imageBuffer = req.file.buffer;
@@ -121,17 +135,20 @@ app.post('/compress-image', upload.single('image'), async (req, res) => {
     }
 
     // Send the compressed image directly back to the client
-    res.set('Content-Type', 'image/jpeg');
-    res.set('Content-Disposition', `attachment; filename=compressed_${Date.now()}_${req.file.originalname}`);
+    res.set("Content-Type", "image/jpeg");
+    res.set(
+      "Content-Disposition",
+      `attachment; filename=compressed_${Date.now()}_${req.file.originalname}`
+    );
     res.send(compressedImageBuffer);
   } catch (error) {
-    console.error('Error compressing image:', error);
-    res.status(500).send('Error processing image');
+    console.error("Error compressing image:", error);
+    res.status(500).send("Error processing image");
   }
 });
 
 // Endpoint to resize and download the image
-app.post('/resize-image', upload.single('image'), async (req, res) => {
+app.post("/resize-image", upload.single("image"), async (req, res) => {
   const width = parseInt(req.body.width);
   const height = parseInt(req.body.height);
   const imageBuffer = req.file.buffer;
@@ -141,19 +158,22 @@ app.post('/resize-image', upload.single('image'), async (req, res) => {
       .resize(width, height)
       .toBuffer();
 
-    res.set('Content-Type', 'image/jpeg');
-    res.set('Content-Disposition', `attachment; filename=resized_${Date.now()}_${req.file.originalname}`);
+    res.set("Content-Type", "image/jpeg");
+    res.set(
+      "Content-Disposition",
+      `attachment; filename=resized_${Date.now()}_${req.file.originalname}`
+    );
     res.send(resizedImageBuffer);
   } catch (error) {
-    console.error('Error resizing image:', error);
-    res.status(500).send('Error processing image');
+    console.error("Error resizing image:", error);
+    res.status(500).send("Error processing image");
   }
 });
 
-app.post('/convert-image-to-pdf', upload.single('image'), async (req, res) => {
+app.post("/convert-image-to-pdf", upload.single("image"), async (req, res) => {
   try {
     if (!req.file || !req.file.buffer) {
-      return res.status(400).send('No image file provided');
+      return res.status(400).send("No image file provided");
     }
 
     const imageBuffer = req.file.buffer;
@@ -177,13 +197,15 @@ app.post('/convert-image-to-pdf', upload.single('image'), async (req, res) => {
     });
 
     const pdfBytes = await pdfDoc.save();
-    res.set('Content-Type', 'application/pdf');
-    res.set('Content-Disposition', `attachment; filename=image_${Date.now()}.pdf`);
+    res.set("Content-Type", "application/pdf");
+    res.set(
+      "Content-Disposition",
+      `attachment; filename=image_${Date.now()}.pdf`
+    );
     res.send(Buffer.from(pdfBytes));
-    
   } catch (error) {
-    console.error('Error converting image to PDF:', error);
-    res.status(500).send('Error processing image');
+    console.error("Error converting image to PDF:", error);
+    res.status(500).send("Error processing image");
   }
 });
 

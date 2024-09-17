@@ -28,10 +28,16 @@ function App() {
         <Route path="/pdf-converter" element={<PdfConverter />} />
 
         <Route path="/jpeg-image-compressor" element={<JpegCompressor />} />
-        <Route path="/jpeg-imagecompressor/:articleId" element={<JpegCompressorarticle/>} />
+        <Route
+          path="/jpeg-imagecompressor/:articleId"
+          element={<JpegCompressorarticle />}
+        />
 
         <Route path="/png-image-compressor" element={<PngCompressor />} />
-        <Route path="/png-imagecompressor/:articleId" element={<PngCompressorarticle />} />
+        <Route
+          path="/png-imagecompressor/:articleId"
+          element={<PngCompressorarticle />}
+        />
 
         <Route path="/gif-image-compressor" element={<GifCompressor />} />
         <Route path="/gif-imagecompressor/:articleId" element={<GifCompressorarticle />} />

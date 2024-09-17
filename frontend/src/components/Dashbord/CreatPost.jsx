@@ -1,55 +1,78 @@
-import React, { useState, useRef } from 'react';
-import JoditEditor from 'jodit-react';
+import React, { useState } from "react";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
 
 function CreatPost() {
-  const editor = useRef(null);
-  const [content, setContent] = useState(''); // For handling description
-  const [handle, setHandle] = useState({
-    category: '',
-    title: '',
-  });
+  const [content, setContent] = useState("");
+  const [handle, setHandle] = useState({ category: "", title: "" });
   const [categories, setCategories] = useState([
-    'Pdf-Converter',
-    'Resize-card',
-    'JPED Compressor',
-    'PNG Compressor',
-    'GIF Compressor',
+    "Pdf-Converter",
+    "Resize-card",
+    "JPED Compressor",
+    "PNG Compressor",
+    "GIF Compressor",
   ]);
-  const [newCategory, setNewCategory] = useState('');
+  const [newCategory, setNewCategory] = useState("");
   const [showAddCategory, setShowAddCategory] = useState(false);
 
-  // Handle input fields
+  const modules = {
+    toolbar: [
+      [{ header: [1, 2, false] }],
+      ["bold", "italic", "underline", "strike", "blockquote"],
+      [
+        { list: "ordered" },
+        { list: "bullet" },
+        { indent: "-1" },
+        { indent: "+1" },
+      ],
+      ["link", "image"],
+      ["clean"],
+    ],
+  };
+
+  const formats = [
+    "header",
+    "bold",
+    "italic",
+    "underline",
+    "strike",
+    "blockquote",
+    "list",
+    "bullet",
+    "indent",
+    "link",
+    "image",
+  ];
+
   const handleInput = (e) => {
     const { name, value } = e.target;
     setHandle({ ...handle, [name]: value });
   };
 
-  // Handle adding new category
   const handleAddCategory = () => {
     if (newCategory && !categories.includes(newCategory)) {
       setCategories([...categories, newCategory]);
-      setHandle({ ...handle, category: newCategory }); // Set the new category as selected
-      setNewCategory(''); // Reset new category input
-      setShowAddCategory(false); // Hide input after adding
+      setHandle({ ...handle, category: newCategory });
+      setNewCategory("");
+      setShowAddCategory(false);
     } else {
-      alert('Category already exists or input is empty');
+      alert("Category already exists or input is empty");
     }
   };
 
-  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     const postData = {
       ...handle,
-      discripition: content, // Adding the JoditEditor content
+      discripition: content, // Adding the ReactQuill content
     };
 
     try {
-      const response = await fetch('http://localhost:5005/api/articles', {
-        method: 'POST',
+      const response = await fetch("http://localhost:5005/api/articles", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(postData),
       });
@@ -57,102 +80,138 @@ function CreatPost() {
       const data = await response.json();
 
       if (response.ok) {
-        alert('Article posted successfully!');
+        alert("Article posted successfully!");
         // Reset form after successful post
         setHandle({
-          category: '',
-          title: '',
+          category: "",
+          title: "",
         });
-        setContent('');
+        setContent("");
       } else {
-        alert('Error: ' + data.message);
+        alert("Error: " + data.message);
       }
     } catch (error) {
-      console.error('Error posting article:', error);
+      console.error("Error posting article:", error);
     }
   };
 
   return (
-    <div className="container2">
-      <h2>Create a New Post</h2>
-      <form onSubmit={handleSubmit} className="form-container">
-        <div className="input-group">
-          <input
-            name="title"
-            type="text"
-            onChange={handleInput}
-            placeholder="Title"
-            value={handle.title}
-            className="input-field"
-            required
-          />
-        </div>
-
-        {/* Category Dropdown */}
-        <div className="input-group">
-          <select
-            name="category"
-            value={handle.category}
-            onChange={handleInput}
-            className="input-field"
-            required
-          >
-            <option value="" disabled>Select Category</option>
-            {categories.map((category, index) => (
-              <option key={index} value={category}>
-                {category}
-              </option>
-            ))}
-          </select>
-
-          {/* Add New Category Button */}
-          <button
-            type="button"
-            className="add-category-button"
-            onClick={() => setShowAddCategory(!showAddCategory)}
-          >
-            {showAddCategory ? 'Cancel' : 'Add New Category'}
-          </button>
-        </div>
-
-        {/* Input for adding new category */}
-        {showAddCategory && (
-          <div className="input-group add-category-input">
-            <input
-              type="text"
-              placeholder="New Category"
-              value={newCategory}
-              onChange={(e) => setNewCategory(e.target.value)}
-              className="input-field"
-              autoFocus
-            />
-            <button
-              type="button"
-              className="submit-button mt-3"
-              onClick={handleAddCategory}
-            >
-              Add
-            </button>
+    <div className="bg-gray-900 min-h-screen">
+      <div className="max-w-6xl mx-auto px-4 py-8">
+        <h1 className="text-3xl font-bold text-white mb-8">Dashboard</h1>
+        <div className="bg-gray-800 rounded-lg shadow-xl overflow-hidden">
+          <div className="px-6 py-4 bg-gradient-to-r from-indigo-600 to-purple-600">
+            <h2 className="text-2xl font-semibold text-white">
+              Create New Post
+            </h2>
           </div>
-        )}
+          <form onSubmit={handleSubmit} className="p-6 space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label
+                  htmlFor="title"
+                  className="block text-sm font-medium text-gray-400 mb-2"
+                >
+                  Title
+                </label>
+                <input
+                  id="title"
+                  name="title"
+                  type="text"
+                  onChange={handleInput}
+                  placeholder="Enter post title"
+                  value={handle.title}
+                  className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  required
+                />
+              </div>
+              <div>
+                <label
+                  htmlFor="category"
+                  className="block text-sm font-medium text-gray-400 mb-2"
+                >
+                  Category
+                </label>
+                <div className="flex space-x-2">
+                  <select
+                    id="category"
+                    name="category"
+                    value={handle.category}
+                    onChange={handleInput}
+                    className="flex-grow px-4 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    required
+                  >
+                    <option value="" disabled>
+                      Select Category
+                    </option>
+                    {categories.map((category, index) => (
+                      <option key={index} value={category}>
+                        {category}
+                      </option>
+                    ))}
+                  </select>
+                  <button
+                    type="button"
+                    className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition duration-300"
+                    onClick={() => setShowAddCategory(!showAddCategory)}
+                  >
+                    {showAddCategory ? "Cancel" : "New"}
+                  </button>
+                </div>
+              </div>
+            </div>
 
-        {/* Jodit Editor for Description */}
-        <div className="editor-container">
-          <JoditEditor
-            ref={editor}
-            value={content}
-            onChange={(newContent) => setContent(newContent)}
-          />
+            {showAddCategory && (
+              <div className="flex space-x-4">
+                <input
+                  type="text"
+                  placeholder="New Category Name"
+                  value={newCategory}
+                  onChange={(e) => setNewCategory(e.target.value)}
+                  className="flex-grow px-4 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  autoFocus
+                />
+                <button
+                  type="button"
+                  className="px-6 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition duration-300"
+                  onClick={handleAddCategory}
+                >
+                  Add
+                </button>
+              </div>
+            )}
+            <div className="h-[calc(100vh-300px)]">
+              {" "}
+              {/* Adjust the 300px value as needed */}
+              <label
+                htmlFor="content"
+                className="block text-sm font-medium text-gray-400 mb-2"
+              >
+                Content
+              </label>
+              <div className="border border-gray-600 rounded-md overflow-hidden h-full">
+                <ReactQuill
+                  theme="snow"
+                  value={content}
+                  onChange={setContent}
+                  modules={modules}
+                  formats={formats}
+                  className="bg-gray-800 text-white h-full"
+                />
+              </div>
+            </div>
+            <div>
+              <button
+                type="submit"
+                className="w-full px-6 py-3 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition duration-300 text-lg font-semibold"
+              >
+                Publish Post
+              </button>
+            </div>
+          </form>
         </div>
-
-        <div className="input-group">
-          <button type="submit" className="submit-button">
-            Post
-          </button>
-        </div>
-      </form>
+      </div>
     </div>
   );
 }
-
 export default CreatPost;
