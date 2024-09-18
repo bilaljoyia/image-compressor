@@ -1,15 +1,9 @@
 import React, { useEffect, useState } from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
-import { Link, useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import {
-  FaHome,
-  FaNewspaper,
-  FaFileAlt,
-  FaImage,
-  FaExchangeAlt,
-} from "react-icons/fa";
+import { FaHome, FaNewspaper } from "react-icons/fa";
 import SidebarItem from "../Dashbord/Sidebar";
 
 function CreatPost() {
@@ -110,7 +104,9 @@ function CreatPost() {
     try {
       const method = id ? "PUT" : "POST"; // Use PUT if editing existing article
       const response = await fetch(
-        `https://backendimagecompressor.bahrainindustrial.com/api/articles${id ? `/${id}` : ""}`,
+        `https://backendimagecompressor.bahrainindustrial.com/api/articles${
+          id ? `/${id}` : ""
+        }`,
         {
           method,
           headers: {
@@ -146,13 +142,15 @@ function CreatPost() {
   };
 
   return (
-    <div className="bg-gray-900 min-h-screen flex">
-      {/* Enhanced Sidebar */}
-      <div className="w-64 bg-gradient-to-b from-gray-800 to-gray-900 text-white h-screen overflow-y-auto">
-        <div className="p-6">
-          <h2 className="text-3xl font-bold mb-8 text-indigo-300">Dashboard</h2>
+    <div className="bg-gray-900 min-h-screen flex flex-col md:flex-row">
+      {/* Responsive Sidebar */}
+      <div className="w-full md:w-64 bg-gradient-to-b from-gray-800 to-gray-900 text-white md:h-screen overflow-y-auto">
+        <div className="p-4 md:p-6">
+          <h2 className="text-2xl md:text-3xl font-bold mb-6 md:mb-8 text-indigo-300">
+            Dashboard
+          </h2>
           <nav>
-            <ul className="space-y-2">
+            <ul className="flex md:flex-col space-x-4 md:space-x-0 md:space-y-2">
               <SidebarItem to="/dashboard" icon={<FaHome />} text="Home" />
               <SidebarItem to="/articles" icon={<FaNewspaper />} text="Post" />
             </ul>
@@ -161,18 +159,22 @@ function CreatPost() {
       </div>
 
       {/* Main Content */}
-
-      <div className="flex-1 p-8">
+      <div className="flex-1 p-4 md:p-8 overflow-y-auto">
         <div className="max-w-4xl mx-auto">
-          <h1 className="text-3xl font-bold text-white mb-8">Dashboard</h1>
+          <h1 className="text-2xl md:text-3xl font-bold text-white mb-6 md:mb-8">
+            Dashboard
+          </h1>
           <div className="bg-gray-800 rounded-lg shadow-xl overflow-hidden">
-            <div className="px-6 py-4 bg-gradient-to-r from-indigo-600 to-purple-600">
-              <h2 className="text-2xl font-semibold text-white">
+            <div className="px-4 md:px-6 py-4 bg-gradient-to-r from-indigo-600 to-purple-600">
+              <h2 className="text-xl md:text-2xl font-semibold text-white">
                 {id ? "Edit Post" : "Create New Post"}
               </h2>
             </div>
-            <form onSubmit={handleSubmit} className="p-6 space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <form
+              onSubmit={handleSubmit}
+              className="p-4 md:p-6 space-y-4 md:space-y-6"
+            >
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                 <div>
                   <label
                     htmlFor="title"
@@ -187,7 +189,7 @@ function CreatPost() {
                     onChange={handleInput}
                     placeholder="Enter post title"
                     value={handle.title}
-                    className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
                     required
                   />
                 </div>
@@ -198,13 +200,13 @@ function CreatPost() {
                   >
                     Category
                   </label>
-                  <div className="flex space-x-2">
+                  <div className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-2">
                     <select
                       id="category"
                       name="category"
                       value={handle.category}
                       onChange={handleInput}
-                      className="flex-grow px-4 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                      className="flex-grow px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
                       required
                     >
                       <option value="" disabled>
@@ -228,13 +230,13 @@ function CreatPost() {
               </div>
 
               {showAddCategory && (
-                <div className="flex space-x-4">
+                <div className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-4">
                   <input
                     type="text"
                     placeholder="New Category Name"
                     value={newCategory}
                     onChange={(e) => setNewCategory(e.target.value)}
-                    className="flex-grow px-4 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    className="flex-grow px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
                     autoFocus
                   />
                   <button
@@ -247,7 +249,7 @@ function CreatPost() {
                 </div>
               )}
 
-              <div className="h-[calc(100vh-300px)]">
+              <div className="h-[calc(100vh-400px)] md:h-[calc(100vh-300px)]">
                 <label
                   htmlFor="content"
                   className="block text-sm font-medium text-gray-400 mb-2"
@@ -263,16 +265,16 @@ function CreatPost() {
                 />
               </div>
 
-              <div className="flex justify-end space-x-4">
+              <div className="flex flex-col md:flex-row justify-end space-y-2 md:space-y-0 md:space-x-4">
                 <button
                   type="submit"
-                  className="px-6 py-2 mt-3 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition duration-300"
+                  className="px-6 py-2 mt-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition duration-300"
                 >
                   {id ? "Update Post" : "Create Post"}
                 </button>
                 <button
                   type="button"
-                  className="px-6 py-2 mt-3 bg-gray-600 text-white rounded-md hover:bg-gray-700 transition duration-300"
+                  className="px-6 py-2 m-5 bg-gray-600 text-white rounded-md hover:bg-gray-700 transition duration-300"
                   onClick={() => navigate("/articles")}
                 >
                   Cancel
@@ -285,4 +287,5 @@ function CreatPost() {
     </div>
   );
 }
+
 export default CreatPost;
