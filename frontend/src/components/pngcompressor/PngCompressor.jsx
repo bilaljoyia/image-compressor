@@ -1,27 +1,33 @@
-import React from 'react'
+import React from "react";
 import Buttons from "../Buttons";
 import FAQSection from "../Home/FAQ";
-import Featurepngcompressor from './Featurepngcompressor';
+import Featurepngcompressor from "./Featurepngcompressor";
 
 function PngCompressor() {
   return (
-    <div>
-    <section className="bg-gray-100">
-      <div className="container mx-auto">
-        <div className="flex gap-5">
-          <div className="left-side mb-6 rounded mt-20 bg-white p-5 shadow-md pt-20 flex-grow overflow-auto">
-                <div>
-                  <h1 className="text-3xl font-semibold mb-10">PNG Compressor</h1>
-                </div>
-            <Featurepngcompressor/>
-            <FAQSection />
+    <div className="bg-gray-100 min-h-screen">
+      <section className="py-8">
+        <div className="container mx-auto px-4">
+          <div className="flex flex-col lg:flex-row gap-5">
+            <div className="left-side mb-6 rounded mt-4 lg:mt-20 bg-white p-4 lg:p-8 shadow-md flex-grow overflow-auto">
+              <div>
+                <h1 className="text-2xl lg:text-3xl font-semibold mb-6 lg:mb-10">
+                  PNG Compressor
+                </h1>
+              </div>
+              <Featurepngcompressor />
+              <div className="mt-12 lg:mt-20">
+                <FAQSection />
+              </div>
+            </div>
+            <div className="lg:w-1/4 mx-auto">
+              <Buttons />
+            </div>
           </div>
-          <Buttons />
         </div>
-      </div>
-    </section>
-  </div>
-  )
+      </section>
+    </div>
+  );
 }
 
-export default PngCompressor
+export default PngCompressor;

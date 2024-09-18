@@ -116,27 +116,25 @@ function Features() {
         </div>
       </div>
 
-      <div className="flex items-center justify-center space-x-4">
-        <div>
+      <div className="flex flex-col md:flex-row items-center justify-center space-y-8 md:space-y-0 md:space-x-4">
+        <div className="text-center">
           <img
-            className="w-96 h-96 rounded-full mr-4"
+            className="w-64 h-64 md:w-96 md:h-96 rounded-full mx-auto"
             src="https://compresskaru.com/wp-content/uploads/2022/10/tom.jpg"
             alt=""
           />
-          <p className="text-center">
-            Original Transparent Photo File Size 50KB
-          </p>
+          <p className="mt-4">Original Transparent Photo File Size 50KB</p>
         </div>
-        vs
-        <div>
+
+        <div className="text-2xl font-bold my-4 md:my-0">vs</div>
+
+        <div className="text-center">
           <img
-            className="w-96 h-96 rounded-full mr-4"
+            className="w-64 h-64 md:w-96 md:h-96 rounded-full mx-auto"
             src="https://compresskaru.com/wp-content/uploads/2022/10/tom.jpg"
             alt=""
           />
-          <p className="text-center">
-            Compressed Transparent Photo File Size 15KB
-          </p>
+          <p className="mt-4">Compressed Transparent Photo File Size 15KB</p>
         </div>
       </div>
 

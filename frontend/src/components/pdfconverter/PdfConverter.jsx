@@ -6,8 +6,8 @@ const PdfConverter = () => {
   const [articles, setArticles] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [currentPage, setCurrentPage] = useState(1); // Track current page
-  const articlesPerPage = 1; // Show one article per page
+  const [currentPage, setCurrentPage] = useState(1);
+  const articlesPerPage = 1;
 
   const handleFileChange = (e) => {
     setSelectedFile(e.target.files[0]);
@@ -19,10 +19,13 @@ const PdfConverter = () => {
         const formData = new FormData();
         formData.append("image", selectedFile);
 
-        const response = await fetch("https://backendimagecompressor.bahrainindustrial.com/convert-image-to-pdf", {
-          method: "POST",
-          body: formData,
-        });
+        const response = await fetch(
+          "https://backendimagecompressor.bahrainindustrial.com/convert-image-to-pdf",
+          {
+            method: "POST",
+            body: formData,
+          }
+        );
 
         if (response.ok) {
           const blob = await response.blob();
@@ -32,7 +35,7 @@ const PdfConverter = () => {
           link.download = "converted_image.pdf";
           document.body.appendChild(link);
           link.click();
-          URL.revokeObjectURL(url); // Clean up the URL object
+          URL.revokeObjectURL(url);
           document.body.removeChild(link);
         } else {
           console.error("Error converting image to PDF");
@@ -43,41 +46,39 @@ const PdfConverter = () => {
     }
   };
 
-  // Fetch articles with category "Pdf-Converter"
   useEffect(() => {
     const fetchArticles = async () => {
       try {
-        const response = await fetch('https://backendimagecompressor.bahrainindustrial.com/api/articles/category/Pdf-Converter');
+        const response = await fetch(
+          "https://backendimagecompressor.bahrainindustrial.com/api/articles/category/Pdf-Converter"
+        );
         const data = await response.json();
 
         if (response.ok) {
-          setArticles(data); // Set fetched articles
+          setArticles(data);
         } else {
-          setError(data.message); // Handle error if any
+          setError(data.message);
         }
       } catch (err) {
         setError("Error fetching articles.");
       } finally {
-        setLoading(false); // Stop loading after the fetch is done
+        setLoading(false);
       }
     };
 
     fetchArticles();
   }, []);
 
-  // Pagination logic
   const totalArticles = articles.length;
   const totalPages = Math.ceil(totalArticles / articlesPerPage);
-  const currentArticle = articles[currentPage - 1]; // Get the current article
+  const currentArticle = articles[currentPage - 1];
 
-  // Handle Next button click
   const handleNextPage = () => {
     if (currentPage < totalPages) {
       setCurrentPage(currentPage + 1);
     }
   };
 
-  // Handle Previous button click
   const handlePreviousPage = () => {
     if (currentPage > 1) {
       setCurrentPage(currentPage - 1);
@@ -85,21 +86,20 @@ const PdfConverter = () => {
   };
 
   return (
-    <section className="bg-gray-100">
-      <div className="container mx-auto">
-        <div className="flex gap-5">
-          {/* Show Single Article */}
+    <section className="bg-gray-100 min-h-screen py-8">
+      <div className="container mx-auto px-4">
+        <div className="flex flex-col lg:flex-row gap-5">
           {loading ? (
-            <p>Loading articles...</p>
+            <p className="text-center text-lg">Loading articles...</p>
           ) : error ? (
-            <p>Error: {error}</p>
+            <p className="text-center text-lg text-red-500">Error: {error}</p>
           ) : (
             currentArticle && (
-              <div className="left-side mb-6 rounded mt-20 bg-white p-5 shadow-md pt-20 flex-grow overflow-auto">
-                <h1 className="text-3xl font-semibold mb-52">
+              <div className="left-side mb-6 rounded mt-4 lg:mt-20 bg-white p-4 lg:p-8 shadow-md flex-grow overflow-auto">
+                <h1 className="text-2xl lg:text-3xl font-semibold mb-8 lg:mb-12">
                   {currentArticle.title}
                 </h1>
-                <form>
+                <form className="mb-8">
                   <div className="border-2 hover:border-dotted border-[#0C2F55] rounded p-4 mb-4 text-center">
                     <input
                       type="file"
@@ -109,12 +109,12 @@ const PdfConverter = () => {
                       onChange={handleFileChange}
                       required
                     />
-                    <p className="mb-6 text-gray-500 text-[18px]">
+                    <p className="mb-6 text-gray-500 text-base lg:text-lg">
                       Select Or Drag Images Here
                     </p>
                     <label
                       htmlFor="file-upload"
-                      className="cursor-pointer px-6 py-2 bg-[#0C2F55] hover:bg-[#F79422] text-white transition"
+                      className="cursor-pointer px-4 lg:px-6 py-2 bg-[#0C2F55] hover:bg-[#F79422] text-white transition"
                     >
                       Select Images
                     </label>
@@ -123,29 +123,40 @@ const PdfConverter = () => {
                     <button
                       type="button"
                       onClick={handleConvertToPDF}
-                      className="bg-[#0C2F55] hover:scale-105 transition-all duration-300 ml-3 text-white px-7 py-2 rounded-full"
+                      className="bg-[#0C2F55] hover:scale-105 transition-all duration-300 text-white px-6 lg:px-7 py-2 rounded-full"
                     >
                       Convert to PDF
                     </button>
                   </div>
                 </form>
-                <div className="mt-10 text-xl p-4">
-                  {/* Rendering HTML safely */}
-                  <div dangerouslySetInnerHTML={{ __html: currentArticle.discripition }} />
+                <div className="mt-8 lg:mt-10 text-base lg:text-xl">
+                  <div
+                    dangerouslySetInnerHTML={{
+                      __html: currentArticle.discripition,
+                    }}
+                    className="prose max-w-none"
+                  />
                 </div>
-                {/* Pagination Controls */}
-                <div className="flex justify-between items-center mt-8">
+                <div className="flex justify-between items-center mt-8 lg:mt-12">
                   <button
                     onClick={handlePreviousPage}
                     disabled={currentPage === 1}
-                    className={`px-4 py-2 rounded-full ${currentPage === 1 ? 'bg-gray-300 cursor-not-allowed' : 'bg-[#F79422] hover:bg-[#0C2F55] text-white'}`}
+                    className={`px-4 py-2 rounded-full ${
+                      currentPage === 1
+                        ? "bg-gray-300 cursor-not-allowed"
+                        : "bg-[#F79422] hover:bg-[#0C2F55] text-white"
+                    }`}
                   >
                     Previous
                   </button>
                   <button
                     onClick={handleNextPage}
                     disabled={currentPage === totalPages}
-                    className={`px-4 py-2 rounded-full ${currentPage === totalPages ? 'bg-gray-300 cursor-not-allowed' : 'bg-[#F79422] hover:bg-[#0C2F55] text-white'}`}
+                    className={`px-4 py-2 rounded-full ${
+                      currentPage === totalPages
+                        ? "bg-gray-300 cursor-not-allowed"
+                        : "bg-[#F79422] hover:bg-[#0C2F55] text-white"
+                    }`}
                   >
                     Next
                   </button>
@@ -153,8 +164,9 @@ const PdfConverter = () => {
               </div>
             )
           )}
-
-          <Buttons />
+          <div className="lg:w-1/4 mx-auto">
+            <Buttons />
+          </div>
         </div>
       </div>
     </section>
