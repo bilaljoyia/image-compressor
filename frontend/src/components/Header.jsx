@@ -51,8 +51,9 @@ function NavItems({ mobile }) {
         label="PDF Converter"
         itemClass={itemClass}
       />
+      <Link to="/jpeg-image-compressor">
       <DropdownNavItem
-        to="/jpeg-image-compressor"
+        
         label="JPEG Compressor"
         items={[
           "JPEG to 1MB",
@@ -63,20 +64,26 @@ function NavItems({ mobile }) {
         itemClass={itemClass}
         mobile={mobile}
       />
+      </Link>
+        
+        <Link to="/png-image-compressor">
       <DropdownNavItem
-        to="/png-image-compressor"
         label="PNG Compressor"
         items={["PNG 1MB", "PNG 500KB", "PNG 200KB", "PNG 100KB"]}
         itemClass={itemClass}
         mobile={mobile}
       />
+      </Link>
+      <Link to="/gif-image-compressor">
       <DropdownNavItem
-        to="/gif-image-compressor"
+        
         label="GIF Compressor"
         items={["GIF 1MB", "GIF 500KB", "GIF 200KB", "GIF 100KB"]}
         itemClass={itemClass}
         mobile={mobile}
       />
+
+      </Link>
     </ul>
   );
 }

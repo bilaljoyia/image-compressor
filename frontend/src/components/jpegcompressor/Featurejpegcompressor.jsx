@@ -12,7 +12,7 @@ function Featurejpegcompressor() {
     useEffect(() => {
       const fetchArticles = async () => {
         try {
-          const response = await fetch('https://backendimagecompressor.bahrainindustrial.com/api/articles/category/JPEG Compressor');
+          const response = await fetch('http://localhost:5005/api/articles/category/JPEG Compressor');
           const data = await response.json();
   
           if (response.ok) {

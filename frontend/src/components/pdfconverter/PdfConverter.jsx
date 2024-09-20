@@ -20,7 +20,7 @@ const PdfConverter = () => {
         formData.append("image", selectedFile);
 
         const response = await fetch(
-          "https://backendimagecompressor.bahrainindustrial.com/convert-image-to-pdf",
+          "http://localhost:5005/convert-image-to-pdf",
           {
             method: "POST",
             body: formData,
@@ -50,7 +50,7 @@ const PdfConverter = () => {
     const fetchArticles = async () => {
       try {
         const response = await fetch(
-          "https://backendimagecompressor.bahrainindustrial.com/api/articles/category/Pdf-Converter"
+          "http://localhost:5005/api/articles/category/Pdf-Converter"
         );
         const data = await response.json();
 

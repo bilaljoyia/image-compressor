@@ -257,53 +257,36 @@ app.post("/convert-image-to-pdf", upload.single("image"), async (req, res) => {
   }
 });
 
-app.post('/convert-image-to-webp', upload.single('image'), async (req, res) => {
+app.post('/convert-image-to-:format', upload.single('image'), async (req, res) => {
+  const format = req.params.format;  // Capture the format from the route
   const imageBuffer = req.file.buffer;
-
+  
   try {
-    const webpImageBuffer = await sharp(imageBuffer)
-      .webp() // Convert to webp without adjusting quality
-      .toBuffer();
+    let convertedImageBuffer;
 
-    res.set('Content-Type', 'image/webp');
-    res.set('Content-Disposition', `attachment; filename=converted_image_${Date.now()}.webp`);
-    res.send(webpImageBuffer);
+    // Convert the image based on the format
+    if (format === 'jpg') {
+      convertedImageBuffer = await sharp(imageBuffer)
+        .jpeg()  // Convert to JPEG
+        .toBuffer();
+    } else if (format === 'png') {
+      convertedImageBuffer = await sharp(imageBuffer)
+        .png()  // Convert to PNG
+        .toBuffer();
+    } else if (format === 'webp') {
+      convertedImageBuffer = await sharp(imageBuffer)
+        .webp()  // Convert to WebP
+        .toBuffer();
+    } else {
+      return res.status(400).send('Unsupported format');  // Error if format is not supported
+    }
+
+    // Send the converted image back to the client
+    res.set('Content-Type', `image/${format}`);
+    res.set('Content-Disposition', `attachment; filename=converted_${Date.now()}.${format}`);
+    res.send(convertedImageBuffer);
   } catch (error) {
-    console.error('Error converting image to WebP:', error);
-    res.status(500).send('Error processing image');
-  }
-});
-
-app.post('/convert-image-to-png', upload.single('image'), async (req, res) => {
-  const imageBuffer = req.file.buffer;
-
-  try {
-    const pngImageBuffer = await sharp(imageBuffer)
-      .png() // Convert to PNG without adjusting compression
-      .toBuffer();
-
-    res.set('Content-Type', 'image/png');
-    res.set('Content-Disposition', `attachment; filename=converted_${Date.now()}.png`);
-    res.send(pngImageBuffer);
-  } catch (error) {
-    console.error('Error converting image to PNG:', error);
-    res.status(500).send('Error processing image');
-  }
-});
-
-app.post('/convert-image-to-jpg', upload.single('image'), async (req, res) => {
-  const imageBuffer = req.file.buffer;
-
-  try {
-    const jpgImageBuffer = await sharp(imageBuffer)
-      .jpeg() // Convert to JPEG without adjusting quality
-      .toBuffer();
-
-    res.set('Content-Type', 'image/jpeg');
-    res.set('Content-Disposition', `attachment; filename=converted_${Date.now()}.jpg`);
-    res.send(jpgImageBuffer);
-  } catch (error) {
-    console.error('Error converting image to JPG:', error);
+    console.error('Error converting image:', error);
     res.status(500).send('Error processing image');
   }
 });

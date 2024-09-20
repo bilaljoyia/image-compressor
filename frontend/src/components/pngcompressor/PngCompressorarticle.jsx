@@ -14,7 +14,7 @@ function PngCompressorarticle() {
     const fetchArticle = async () => {
       try {
         const response = await fetch(
-          `https://backendimagecompressor.bahrainindustrial.com/api/articles/${articleId}`
+          `http://localhost:5005/api/articles/${articleId}`
         );
         const data = await response.json();
 

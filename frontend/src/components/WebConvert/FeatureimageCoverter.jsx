@@ -15,7 +15,7 @@ function FeatureimageCoverter() {
     useEffect(() => {
         const fetchArticles = async () => {
             try {
-                const response = await fetch('https://backendimagecompressor.bahrainindustrial.com/api/articles/category/Image Converter');
+                const response = await fetch('http://localhost:5005/api/articles/category/Image Converter');
                 const data = await response.json();
 
                 if (response.ok) {
@@ -65,24 +65,18 @@ function FeatureimageCoverter() {
             }
         }
     };
-
     const handleConvert = async (format) => {
         if (!selectedFile) return;
-
+    
         const formData = new FormData();
         formData.append("image", selectedFile);
-
-        let endpoint = '';
-        if (format === 'webp') endpoint = '/convert-image-to-webp';
-        else if (format === 'png') endpoint = '/convert-image-to-png';
-        else if (format === 'jpg') endpoint = '/convert-image-to-jpg';
-
+    
         try {
-            const response = await fetch(`https://backendimagecompressor.bahrainindustrial.com/api/articles${endpoint}`, {
+            const response = await fetch(`http://localhost:5005/convert-image-to-${format}`, { // Dynamically passing the format here
                 method: 'POST',
                 body: formData,
             });
-
+    
             const blob = await response.blob();
             const url = window.URL.createObjectURL(blob);
             const link = document.createElement('a');
@@ -95,7 +89,7 @@ function FeatureimageCoverter() {
             console.error("Error converting image:", error);
         }
     };
-
+    
     // Function to handle Next button click
     const handleNextArticle = () => {
         if (currentArticleIndex < articles.length - 1) {
@@ -148,25 +142,26 @@ function FeatureimageCoverter() {
 
                                     {/* Conversion Buttons */}
                                     <div className="flex justify-center gap-4 mt-6">
-                                        <button
-                                            onClick={() => handleConvert('webp')}
-                                            className="bg-[#F79422] hover:bg-[#0C2F55] text-white px-6 py-2 rounded-full"
-                                        >
-                                            Convert to WebP
-                                        </button>
-                                        <button
-                                            onClick={() => handleConvert('png')}
-                                            className="bg-[#F79422] hover:bg-[#0C2F55] text-white px-6 py-2 rounded-full"
-                                        >
-                                            Convert to PNG
-                                        </button>
-                                        <button
-                                            onClick={() => handleConvert('jpg')}
-                                            className="bg-[#F79422] hover:bg-[#0C2F55] text-white px-6 py-2 rounded-full"
-                                        >
-                                            Convert to JPG
-                                        </button>
-                                    </div>
+    <button
+        onClick={() => handleConvert('jpg')}  // Call with 'jpg' format
+        className="bg-[#F79422] hover:bg-[#0C2F55] text-white px-6 py-2 rounded-full"
+    >
+        Convert to JPG
+    </button>
+    <button
+        onClick={() => handleConvert('png')}  // Add another button for PNG conversion
+        className="bg-[#F79422] hover:bg-[#0C2F55] text-white px-6 py-2 rounded-full"
+    >
+        Convert to PNG
+    </button>
+    <button
+        onClick={() => handleConvert('webp')}  // Add another button for WebP conversion
+        className="bg-[#F79422] hover:bg-[#0C2F55] text-white px-6 py-2 rounded-full"
+    >
+        Convert to WebP
+    </button>
+</div>
+
                                     <div className="mt-10 text-xl p-4">
                                         {/* Rendering HTML safely */}
                                         <div dangerouslySetInnerHTML={{ __html: articles[currentArticleIndex].discripition }} />

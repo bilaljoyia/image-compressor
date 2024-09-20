@@ -46,7 +46,7 @@ const ResizeArticle = () => {
   useEffect(() => {
     const fetchArticle = async () => {
       try {
-        const response = await fetch(`https://backendimagecompressor.bahrainindustrial.com/api/articles/${articleId}`);
+        const response = await fetch(`http://localhost:5005/api/articles/${articleId}`);
         const data = await response.json();
 
         if (response.ok) {
@@ -76,7 +76,7 @@ const ResizeArticle = () => {
         formData.append("width", width);
         formData.append("height", height);
 
-        const response = await fetch("https://backendimagecompressor.bahrainindustrial.com/resize-image", {
+        const response = await fetch("http://localhost:5005/resize-image", {
           method: "POST",
           body: formData,
         });

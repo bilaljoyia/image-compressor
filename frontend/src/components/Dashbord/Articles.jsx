@@ -12,7 +12,7 @@ function Articles() {
     const fetchArticles = async () => {
       try {
         const response = await fetch(
-          "https://backendimagecompressor.bahrainindustrial.com/api/articles"
+          "http://localhost:5005/api/articles"
         );
         const data = await response.json();
         setArticles(data);
@@ -28,7 +28,7 @@ function Articles() {
     if (window.confirm("Are you sure you want to delete this article?")) {
       try {
         const response = await fetch(
-          `https://backendimagecompressor.bahrainindustrial.com/api/articles/${id}`,
+          `http://localhost:5005/api/articles/${id}`,
           {
             method: "DELETE",
           }
